@@ -22,9 +22,30 @@ class RestController {
             ResponseEntity.badRequest().body("You are Chukcha")
         }
 
+    @RequestMapping(value = ["/countries/{country}"], method = [(RequestMethod.GET)])
+    fun getListCitiesInCountry(@PathVariable("country") country: String): ResponseEntity<List<City>> =
+        ResponseEntity.ok(
+            when (country.lowercase().trim()) {
+                "uruguay" -> listOf(
+                    City(id = 1, name = "Montevideo", population = 18000000),
+                    City(id = 2, name = "Colonia", population = 100000),
+                    City(id = 3, name = "Punta del Este", population = 150000)
+                )
+                "russia" -> listOf(
+                    City(id = 1, name = "Moscow", population = 12000000),
+                    City(id = 2, name = "Saint-Petersburg", population = 5000000),
+                    City(id = 3, name = "Tula", population = 600000)
+                )
+
+                else -> listOf()
+            }
+        )
+
 }
 
 data class HelloResponse(
     val message: String,
     val name: String
 )
+
+data class City(val id: Int, val name: String, val population: Int)
