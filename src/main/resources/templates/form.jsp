@@ -15,7 +15,7 @@
 
 <div class="container my-5">
     <h2 class="text-center">Dummy Table Form</h2>
-    <form action="/dummy-table" method="post" class="form-horizontal">
+    <form action="/submit-dummy-table" method="post" class="form-horizontal">
         <div class="form-group">
             <label for="rows" class="col-sm-2 control-label">Rows:</label>
             <div class="col-sm-10">
