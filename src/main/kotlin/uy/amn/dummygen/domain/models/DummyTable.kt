@@ -1,4 +1,4 @@
-package uy.amn.dummygen.domain
+package uy.amn.dummygen.domain.models
 
 data class DummyTable(
     val rows: Int,
