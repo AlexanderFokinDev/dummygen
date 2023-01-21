@@ -10,7 +10,10 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
-import uy.amn.dummygen.domain.DummyTable
+import uy.amn.dummygen.data.repositories.DummyDataRepositoryImpl
+import uy.amn.dummygen.domain.models.DummyTable
+import uy.amn.dummygen.domain.usecases.GetGeneratedFileCSVUseCase
+import uy.amn.dummygen.domain.usecases.GetGeneratedListUseCase
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
@@ -31,31 +34,18 @@ class DummyTableController {
         @RequestParam email: String
     ): ResponseEntity<InputStreamResource> {
 
-        val dummyTable = DummyTable(rows, columns, email)
+        // TODO: Change with DI
+        val repository = DummyDataRepositoryImpl()
+        val useCase = GetGeneratedFileCSVUseCase(repository)
 
-        val file = File("dummy_table_${rows}_rows.csv")
-        file.delete()
-
-        try {
-            val writer = FileWriter(file)
-            val csvWriter = StatefulBeanToCsvBuilder<DummyTable>(writer).build()
-            csvWriter.write(dummyTable)
-            writer.close()
-        } catch (e: CsvDataTypeMismatchException) {
-            e.printStackTrace()
-        } catch (e: CsvRequiredFieldEmptyException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        val inputStream = FileInputStream(file)
-        val inputStreamResource = InputStreamResource(inputStream)
+        val file = File("dummy_table_${rows}_rows_${columns}_columns.csv")
+        val inputStreamResource = useCase.execute(file, rows, columns).data
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_OCTET_STREAM
         headers.contentLength = file.length()
         headers.contentDisposition = ContentDisposition.builder("attachment").filename(file.name).build()
+        file.delete()
 
         return ResponseEntity.ok().headers(headers).body(inputStreamResource)
     }
