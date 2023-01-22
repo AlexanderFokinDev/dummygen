@@ -1,10 +1,16 @@
 package uy.amn.dummygen
 
+import org.springframework.core.io.InputStreamResource
+import org.springframework.http.ContentDisposition
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.servlet.ModelAndView
+import uy.amn.dummygen.data.repositories.DummyDataRepositoryImpl
+import uy.amn.dummygen.domain.usecases.GetGeneratedFileCSVUseCase
+import java.io.File
 
 @RestController
 @RequestMapping("/api/v1")

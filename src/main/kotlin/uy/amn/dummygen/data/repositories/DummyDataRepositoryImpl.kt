@@ -19,7 +19,12 @@ class DummyDataRepositoryImpl : DummyDataRepository {
 
         val dataList = mutableListOf<GeneratedRow>()
         for (i in 1..rows) {
+
             val fields = mutableListOf<String>()
+
+            val randNumber = (1..100).shuffled().first()
+            fields.add("id_$randNumber")
+
             for (j in 1..columns) {
                 fields.add("Field $j")
             }
