@@ -1,5 +1,6 @@
 package uy.amn.dummygen.data.repositories
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.opencsv.bean.ColumnPositionMappingStrategy
 import com.opencsv.bean.CsvToBeanFilter
 import com.opencsv.bean.StatefulBeanToCsvBuilder
@@ -37,8 +38,6 @@ class DummyDataRepositoryImpl : DummyDataRepository {
 
         val dummyTable = getGeneratedList(rows, columns)
 
-        file.delete()
-
         try {
             val writer = FileWriter(file)
             val csvWriter = StatefulBeanToCsvBuilder<GeneratedRow>(writer).build()
@@ -48,6 +47,26 @@ class DummyDataRepositoryImpl : DummyDataRepository {
             e.printStackTrace()
         } catch (e: CsvRequiredFieldEmptyException) {
             e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        val inputStream = FileInputStream(file)
+
+        return InputStreamResource(inputStream)
+    }
+
+    override fun getGeneratedFileJSON(file: File, rows: Int, columns: Int): InputStreamResource {
+
+        val dummyTable = getGeneratedList(rows, columns)
+
+        val mapper = ObjectMapper()
+        val jsonString = mapper.writeValueAsString(dummyTable)
+
+        try {
+            val writer = FileWriter(file)
+            writer.write(jsonString)
+            writer.close()
         } catch (e: IOException) {
             e.printStackTrace()
         }

@@ -25,6 +25,10 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("com.opencsv:opencsv:5.3")
+
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.11.3")
+	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.3")
+
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
