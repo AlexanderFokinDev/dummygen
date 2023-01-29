@@ -9,6 +9,9 @@ interface DummyDataRepository {
     fun getGeneratedList(rows: Int, columns: Int) : List<GeneratedRow>
 
     fun getGeneratedFileCSV(file: File, rows: Int, columns: Int) : InputStreamResource
+
     fun getGeneratedFileJSON(file: File, rows: Int, columns: Int) : InputStreamResource
+
+    fun getGeneratedFileXML(file: File, rows: Int, columns: Int) : InputStreamResource
 
 }
