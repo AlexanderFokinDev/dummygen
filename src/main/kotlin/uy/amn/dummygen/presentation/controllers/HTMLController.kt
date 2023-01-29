@@ -14,6 +14,7 @@ import uy.amn.dummygen.data.repositories.DummyDataRepositoryImpl
 import uy.amn.dummygen.domain.repositories.DummyDataRepository
 import uy.amn.dummygen.domain.usecases.GetGeneratedFileCSVUseCase
 import uy.amn.dummygen.domain.usecases.GetGeneratedFileJSONUseCase
+import uy.amn.dummygen.domain.usecases.GetGeneratedFileXMLUseCase
 import java.io.File
 
 @Controller
@@ -42,13 +43,13 @@ class HTMLController {
 
         return when (formatSelect) {
             "xml" -> {
-                getCSVFile(repository, rows, columns)
+                getXMLFile(repository, rows, columns)
             }
             "json" -> {
                 getJSONFile(repository, rows, columns)
             }
             "csv" -> {
-                getXMLFile(repository, rows, columns)
+                getCSVFile(repository, rows, columns)
             }
             else -> {
                 getCSVFile(repository, rows, columns)
@@ -89,13 +90,13 @@ class HTMLController {
 
     fun getXMLFile(repository: DummyDataRepository, rows: Int, columns: Int) : ResponseEntity<InputStreamResource> {
 
-        val useCase = GetGeneratedFileCSVUseCase(repository)
+        val useCase = GetGeneratedFileXMLUseCase(repository)
 
-        val file = File("dummy_table_${rows}_rows_${columns}_columns.csv")
+        val file = File("dummy_table_${rows}_rows_${columns}_columns.xml")
         val inputStreamResource = useCase.execute(file, rows, columns).data
 
         val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_OCTET_STREAM
+        headers.contentType = MediaType.APPLICATION_XML
         headers.contentLength = file.length()
         headers.contentDisposition = ContentDisposition.builder("attachment").filename(file.name).build()
 
