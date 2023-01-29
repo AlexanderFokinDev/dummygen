@@ -7,7 +7,7 @@
 <body>
 <div class="container my-5 text-center">
     <h1>Welcome to Dummy Table App</h1>
-    <a href="/form" class="btn btn-primary btn-lg">Create Dummy Table</a>
+    <a href="/data-generator" class="btn btn-primary btn-lg">Create Dummy Table</a>
 </div>
 </body>
 </html>
