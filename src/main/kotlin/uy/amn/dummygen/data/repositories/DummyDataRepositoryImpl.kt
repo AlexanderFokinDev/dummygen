@@ -42,10 +42,6 @@ class DummyDataRepositoryImpl : DummyDataRepository {
             val csvWriter = StatefulBeanToCsvBuilder<GeneratedRow>(writer).build()
             csvWriter.write(dummyTable)
             writer.close()
-        } catch (e: CsvDataTypeMismatchException) {
-            e.printStackTrace()
-        } catch (e: CsvRequiredFieldEmptyException) {
-            e.printStackTrace()
         } catch (e: IOException) {
             e.printStackTrace()
         }
