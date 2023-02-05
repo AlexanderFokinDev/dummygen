@@ -1,0 +1,16 @@
+body {
+  background-image: url('/resources/static/images/dummy_background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.home-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.white-bold-text {
+    font-weight: bold;
+    color: white;
+}
