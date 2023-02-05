@@ -5,6 +5,28 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/resources/static/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script>
+        function onFormatSelectChange() {
+        	const formatSelect = document.getElementById("formatSelect");
+        	const selectedFormat = formatSelect.options[formatSelect.selectedIndex].value;
+        	const rowsInput = document.getElementById("rows");
+        	const columnsInput = document.getElementById("columns");
+        	const submitButton = document.querySelector("button[type='submit']");
+        	const uploadButton = document.querySelector("button[type='upload']");
+
+        	if (selectedFormat === "settings_from_file") {
+        		rowsInput.disabled = true;
+        		columnsInput.disabled = true;
+        		uploadButton.style.visibility = "visible";
+        	} else {
+        		rowsInput.disabled = false;
+        		columnsInput.disabled = false;
+        		uploadButton.style.visibility = "hidden";
+        	}
+        }
+    </script>
+
 </head>
 <body>
 
@@ -32,13 +54,19 @@
         <div class="form-group">
             <label for="formatSelect" class="col-sm-10 control-label white-bold-text">Select a response format:</label>
             <div class="col-sm-10">
-                <select class="col-sm-6 form-control" id="formatSelect" name="formatSelect">
+                <select class="col-sm-6 form-control" id="formatSelect" name="formatSelect" onchange="onFormatSelectChange()">
                     <option value="json">JSON</option>
                     <option value="xml">XML</option>
                     <option value="csv">CSV</option>
                     <option value="query_clickhouse">Clickhouse query</option>
                     <option value="query_sql">SQL query</option>
+                    <option value="settings_from_file">Settings from file</option>
                 </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="upload" class="btn btn-primary btn-md" style="visibility: hidden;">Upload</button>
             </div>
         </div>
         <div class="form-group">
