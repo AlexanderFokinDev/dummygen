@@ -12,17 +12,18 @@
         	const selectedFormat = formatSelect.options[formatSelect.selectedIndex].value;
         	const rowsInput = document.getElementById("rows");
         	const columnsInput = document.getElementById("columns");
+        	const settingsLabel = document.querySelector("label[for='settings_json']");
+        	const settingsInput = document.getElementById("settings_json");
         	const submitButton = document.querySelector("button[type='submit']");
-        	const uploadButton = document.querySelector("button[type='upload']");
 
         	if (selectedFormat === "settings_from_file") {
         		rowsInput.disabled = true;
         		columnsInput.disabled = true;
-        		uploadButton.style.visibility = "visible";
+        		settingsInput.disabled = false;
         	} else {
         		rowsInput.disabled = false;
         		columnsInput.disabled = false;
-        		uploadButton.style.visibility = "hidden";
+        		settingsInput.disabled = true;
         	}
         }
     </script>
@@ -39,22 +40,11 @@
 <div class="container my-5">
     <h2 class="text-center white-bold-text">Dummy Table Form</h2>
     <form action="/submit-dummy-table" method="post" class="form-horizontal">
-        <div class="form-group">
-            <label for="rows" class="col-sm-2 control-label white-bold-text">Rows:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="rows" name="rows">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="columns" class="col-sm-2 control-label white-bold-text">Columns:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="columns" name="columns">
-            </div>
-        </div>
+
         <div class="form-group">
             <label for="formatSelect" class="col-sm-10 control-label white-bold-text">Select a response format:</label>
             <div class="col-sm-10">
-                <select class="col-sm-6 form-control" id="formatSelect" name="formatSelect" onchange="onFormatSelectChange()">
+                <select class="form-control col-sm-6" id="formatSelect" name="formatSelect" onchange="onFormatSelectChange()">
                     <option value="json">JSON</option>
                     <option value="xml">XML</option>
                     <option value="csv">CSV</option>
@@ -64,22 +54,34 @@
                 </select>
             </div>
         </div>
+
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="upload" class="btn btn-primary btn-md" style="visibility: hidden;">Upload</button>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="email" class="col-sm-2 control-label white-bold-text">Email:</label>
+            <label for="rows" class="col-sm-10 control-label white-bold-text">Rows:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="email" name="email">
+                <input type="text" class="col-sm-6 form-control" id="rows" name="rows" value="10">
             </div>
         </div>
+
+        <div class="form-group">
+            <label for="columns" class="col-sm-10 control-label white-bold-text">Columns:</label>
+            <div class="col-sm-10">
+                <input type="text" class="col-sm-6 form-control" id="columns" name="columns" value="5">
+            </div>
+        </div>
+
+        <div class="form-group">
+        <label for="settings_json" class="col-sm-10 control-label white-bold-text">Settings (json format):</label>
+            <div class="col-sm-10">
+                <textarea class="col-sm-10 form-control" id="settings_json" name="settings_json" rows="5" disabled></textarea>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-primary btn-lg">Submit</button>
             </div>
         </div>
+
     </form>
 </div>
 </body>

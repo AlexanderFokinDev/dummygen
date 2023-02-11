@@ -33,8 +33,7 @@ class HTMLController {
     fun submit(
         @RequestParam rows: Int,
         @RequestParam columns: Int,
-        @RequestParam formatSelect: String,
-        @RequestParam email: String
+        @RequestParam formatSelect: String
     ): ResponseEntity<InputStreamResource> {
 
         // TODO: Change with DI
