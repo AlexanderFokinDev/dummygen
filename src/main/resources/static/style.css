@@ -14,3 +14,7 @@ body {
     font-weight: bold;
     color: white;
 }
+
+.text-right {
+  text-align: right;
+}
