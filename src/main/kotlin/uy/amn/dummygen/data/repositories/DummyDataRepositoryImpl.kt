@@ -179,14 +179,15 @@ class DummyDataRepositoryImpl : DummyDataRepository {
 
     override fun getGeneratedFileSQL(file: File, rows: Int, columns: List<ColumnSettings>): InputStreamResource {
 
-       /* val dummyTable = getGeneratedList(rows, columns)
+        val dummyTable = getGeneratedList(rows, columns)
         val tableName = "dummy_table"
-        val columnNames = (1..columns).map { "column_$it" }
+        val columnNames = columns.joinToString(", ") { it.name }
         val dataTypes = mapOf(
-            "integer" to "INT",
+            "int" to "INT",
             "float" to "FLOAT",
             "boolean" to "BOOLEAN",
-            "string" to "VARCHAR(255)"
+            "string" to "VARCHAR(255)",
+            "date" to "DATE"
         )
 
         try {
@@ -194,27 +195,38 @@ class DummyDataRepositoryImpl : DummyDataRepository {
 
             // Generate the CREATE TABLE statement
             writer.write("CREATE TABLE $tableName (\n")
-            for (i in 0 until columns) {
-                val columnName = columnNames[i]
-                val dataType = dataTypes[dummyTable[0].dataTypes[i]]
-                writer.write("  $columnName $dataType NOT NULL,\n")
+            var primaryKey = ""
+            for (column in columns) {
+                val dataType = dataTypes[column.dataType]
+                writer.write("  ${column.name} $dataType NOT NULL,\n")
+                if (column.generator == "increment") {
+                    primaryKey = column.name
+                }
             }
-            writer.write("  PRIMARY KEY (${columnNames.joinToString(", ")})\n")
+
+            if (primaryKey.isNotEmpty()) {
+                writer.write("  PRIMARY KEY ($primaryKey)\n")
+            }
             writer.write(");\n\n")
 
             // Generate the INSERT INTO statements
-            for (row in dummyTable) {
-                writer.write("INSERT INTO $tableName (${columnNames.joinToString(", ")}) VALUES (")
-                for (i in 0 until columns) {
-                    val value = when (dataTypes[dummyTable[0].dataTypes[i]]) {
-                        "INT" -> row.data[i].toInt()
-                        "FLOAT" -> row.data[i].toFloat()
-                        "BOOLEAN" -> if (row.data[i] == "true") "TRUE" else "FALSE"
-                        "VARCHAR(255)" -> "'${row.data[i]}'"
+            for ((indexRow, row) in dummyTable.withIndex()) {
+
+                // Head line with column names
+                if (indexRow == 0) continue
+
+                writer.write("INSERT INTO $tableName ($columnNames) VALUES (")
+                for ((index, column) in columns.withIndex()) {
+                    val value = when (dataTypes[column.dataType]) {
+                        "INT" -> row.fields[index].toInt()
+                        "FLOAT" -> row.fields[index].toFloat()
+                        "BOOLEAN" -> if (row.fields[index] == "true") "TRUE" else "FALSE"
+                        "VARCHAR(255)" -> "'${row.fields[index]}'"
+                        "DATE" -> "toDate('${row.fields[index]}')"
                         else -> error("Unknown data type")
                     }
                     writer.write("$value")
-                    if (i < columns - 1) writer.write(", ")
+                    if (index < columns.count() - 1) writer.write(", ")
                 }
                 writer.write(");\n")
             }
@@ -222,7 +234,73 @@ class DummyDataRepositoryImpl : DummyDataRepository {
             writer.close()
         } catch (e: IOException) {
             e.printStackTrace()
-        }*/
+        }
+
+        val inputStream = FileInputStream(file)
+
+        return InputStreamResource(inputStream)
+    }
+
+    override fun getGeneratedFileClickhouse(file: File, rows: Int, columns: List<ColumnSettings>): InputStreamResource {
+
+        val dummyTable = getGeneratedList(rows, columns)
+        val tableName = "dummy_table"
+        val columnNames = columns.joinToString(", ") { it.name }
+        val dataTypes = mapOf(
+            "int" to "Int32",
+            "float" to "Float32",
+            "boolean" to "UInt8",
+            "string" to "String",
+            "date" to "Date"
+        )
+
+        try {
+            val writer = FileWriter(file)
+
+            // Generate the CREATE TABLE statement
+            writer.write("CREATE TABLE $tableName (\n")
+            var primaryKey = ""
+            for (column in columns) {
+                val dataType = dataTypes[column.dataType]
+                writer.write("  ${column.name} $dataType")
+                if (column.generator == "increment") {
+                    writer.write(" DEFAULT generateUUIDv1()")
+                    primaryKey = column.name
+                }
+                writer.write(",\n")
+            }
+
+            if (primaryKey.isNotEmpty()) {
+                writer.write("  PRIMARY KEY ($primaryKey)\n")
+            }
+            writer.write(") ENGINE = MergeTree ORDER BY $primaryKey;\n\n")
+
+            // Generate the INSERT INTO statements
+            for ((indexRow, row) in dummyTable.withIndex()) {
+
+                // Head line with column names
+                if (indexRow == 0) continue
+
+                writer.write("INSERT INTO $tableName ($columnNames) VALUES (")
+                for ((index, column) in columns.withIndex()) {
+                    val value = when (dataTypes[column.dataType]) {
+                        "Int32" -> row.fields[index].toInt()
+                        "Float32" -> row.fields[index].toFloat()
+                        "UInt8" -> if (row.fields[index] == "true") "1" else "0"
+                        "String" -> "'${row.fields[index]}'"
+                        "Date" -> "toDate('${row.fields[index]}')"
+                        else -> error("Unknown data type")
+                    }
+                    writer.write("$value")
+                    if (index < columns.count() - 1) writer.write(", ")
+                }
+                writer.write(");\n")
+            }
+
+            writer.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
 
         val inputStream = FileInputStream(file)
 
