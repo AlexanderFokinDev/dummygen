@@ -2,7 +2,7 @@
 
 This web-server app takes a JSON file as input and returns a file in the chosen format. The input file specifies the columns to be generated and their respective data types, generators and parameters. The generated output can be formatted as CSV, XML, JSON, SQL or Clickhouse SQL.
 
-The input file can be sent from a web form or via the REST API.
+The input file can be sent from a web form or via the REST API. [Description is here](docs/API.md)
 
 ### Input file structure
 

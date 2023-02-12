@@ -1,12 +1,28 @@
 package uy.amn.dummygen
 
+import org.springframework.core.io.InputStreamResource
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.RestController
+import uy.amn.dummygen.data.repositories.DummyDataRepositoryImpl
+import uy.amn.dummygen.domain.models.SettingsFromFile
+import uy.amn.dummygen.domain.usecases.GetGeneratedFileUseCase
+import java.io.File
 
 @RestController
 @RequestMapping("/api/v1")
 class RestController {
+
+    @PostMapping("/getDummyTable")
+    fun getDummyTable(@RequestBody settingsJson: String): ResponseEntity<InputStreamResource> {
+
+        // TODO: Change with DI
+        val repository = DummyDataRepositoryImpl()
+        return GetGeneratedFileUseCase(repository).execute(settingsJson).data
+    }
+
+
+
 
     @RequestMapping(value = ["/helloWorld"], method = [(RequestMethod.GET)])
     fun getHelloWorldMessage(): ResponseEntity<String> =
