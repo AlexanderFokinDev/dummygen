@@ -12,18 +12,15 @@
         	const selectedFormat = formatSelect.options[formatSelect.selectedIndex].value;
         	const rowsInput = document.getElementById("rows");
         	const columnsInput = document.getElementById("columns");
-        	const settingsLabel = document.querySelector("label[for='settings_json']");
-        	const settingsInput = document.getElementById("settings_json");
+        	const settingsInput = document.getElementById("settingsJson");
         	const submitButton = document.querySelector("button[type='submit']");
 
         	if (selectedFormat === "settings_from_file") {
         		rowsInput.disabled = true;
         		columnsInput.disabled = true;
-        		settingsInput.disabled = false;
         	} else {
         		rowsInput.disabled = false;
         		columnsInput.disabled = false;
-        		settingsInput.disabled = true;
         	}
         }
     </script>
@@ -70,9 +67,9 @@
         </div>
 
         <div class="form-group">
-        <label for="settings_json" class="col-sm-10 control-label white-bold-text">Settings (json format):</label>
+        <label for="settingsJson" class="col-sm-10 control-label white-bold-text">Settings (json format):</label>
             <div class="col-sm-10">
-                <textarea class="col-sm-10 form-control" id="settings_json" name="settings_json" rows="5" disabled></textarea>
+                <textarea class="col-sm-10 form-control" id="settingsJson" name="settingsJson" rows="5"></textarea>
             </div>
         </div>
 
