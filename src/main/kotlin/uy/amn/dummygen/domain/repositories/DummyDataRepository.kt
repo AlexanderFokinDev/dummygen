@@ -17,4 +17,6 @@ interface DummyDataRepository {
 
     fun getGeneratedFileSQL(file: File, rows: Int, columns: List<ColumnSettings>) : InputStreamResource
 
+    fun getGeneratedFileClickhouse(file: File, rows: Int, columns: List<ColumnSettings>) : InputStreamResource
+
 }

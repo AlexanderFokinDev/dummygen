@@ -20,14 +20,14 @@ class GetGeneratedFileUseCase(private val repository: DummyDataRepository) {
         val settings = SettingsFromFile.fromJson(settingsJson)
 
         val uid = UUID.randomUUID().toString().replace("-", "")
-        val file = File("dummy_${uid}.${settings.format}")
+        val file = File("dummy_${uid}.${settings.fileExtension}")
 
         // Logic
         val inputStreamResource = getInputStreamResource(file, settings)
         //
 
         val headers = HttpHeaders()
-        headers.contentType = getContentType(settings.format)
+        headers.contentType = getContentType(settings.fileExtension)
         headers.contentLength = file.length()
         headers.contentDisposition = ContentDisposition.builder("attachment").filename(file.name).build()
 
@@ -74,13 +74,13 @@ class GetGeneratedFileUseCase(private val repository: DummyDataRepository) {
                 repository.getGeneratedFileCSV(file, settings.rows, settings.columns)
             }
 
-            /*"query_clickhouse" -> {
-                //repository.getGeneratedFileCSV(file, settings.rows, columns)
+            "query_clickhouse" -> {
+                repository.getGeneratedFileClickhouse(file, settings.rows, settings.columns)
             }
 
             "query_sql" -> {
-                //repository.getGeneratedFileCSV(file, settings.rows, columns)
-            }*/
+                repository.getGeneratedFileSQL(file, settings.rows, settings.columns)
+            }
 
             else -> {
                 repository.getGeneratedFileCSV(file, settings.rows, settings.columns)
