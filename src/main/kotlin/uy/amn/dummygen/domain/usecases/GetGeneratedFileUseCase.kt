@@ -6,22 +6,28 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import pt.amn.moveon.domain.models.UseCaseResult
+import uy.amn.dummygen.domain.models.SettingsFromFile
 import uy.amn.dummygen.domain.repositories.DummyDataRepository
 import java.io.File
 import java.util.*
 
 class GetGeneratedFileUseCase(private val repository: DummyDataRepository) {
 
-    fun execute(rows: Int, columns: Int, format: String): UseCaseResult<ResponseEntity<InputStreamResource>> {
+    fun execute(settingsJson: String): UseCaseResult<ResponseEntity<InputStreamResource>> {
 
         deleteTempFiles()
 
+        val settings = SettingsFromFile.fromJson(settingsJson)
+
         val uid = UUID.randomUUID().toString().replace("-", "")
-        val file = File("dummy_${uid}.${format}")
-        val inputStreamResource = getInputStreamResource(format, file, rows, columns)
+        val file = File("dummy_${uid}.${settings.format}")
+
+        // Logic
+        val inputStreamResource = getInputStreamResource(file, settings)
+        //
 
         val headers = HttpHeaders()
-        headers.contentType = getContentType(format)
+        headers.contentType = getContentType(settings.format)
         headers.contentLength = file.length()
         headers.contentDisposition = ContentDisposition.builder("attachment").filename(file.name).build()
 
@@ -44,32 +50,40 @@ class GetGeneratedFileUseCase(private val repository: DummyDataRepository) {
                 MediaType.APPLICATION_JSON
             }
 
-            "csv" -> {
-                MediaType.APPLICATION_OCTET_STREAM
-            }
-
             else -> {
                 MediaType.APPLICATION_OCTET_STREAM
             }
         }
 
-    private fun getInputStreamResource(format: String, file: File, rows: Int, columns: Int): InputStreamResource {
+    private fun getInputStreamResource(
+        file: File,
+        settings: SettingsFromFile
+    ): InputStreamResource {
 
-        return when (format) {
+        return when (settings.format) {
+
             "xml" -> {
-                repository.getGeneratedFileXML(file, rows, columns)
+                repository.getGeneratedFileXML(file, settings.rows, settings.columns)
             }
 
             "json" -> {
-                repository.getGeneratedFileJSON(file, rows, columns)
+                repository.getGeneratedFileJSON(file, settings.rows, settings.columns)
             }
 
             "csv" -> {
-                repository.getGeneratedFileCSV(file, rows, columns)
+                repository.getGeneratedFileCSV(file, settings.rows, settings.columns)
             }
 
+            /*"query_clickhouse" -> {
+                //repository.getGeneratedFileCSV(file, settings.rows, columns)
+            }
+
+            "query_sql" -> {
+                //repository.getGeneratedFileCSV(file, settings.rows, columns)
+            }*/
+
             else -> {
-                repository.getGeneratedFileCSV(file, rows, columns)
+                repository.getGeneratedFileCSV(file, settings.rows, settings.columns)
             }
         }
     }
@@ -82,8 +96,9 @@ class GetGeneratedFileUseCase(private val repository: DummyDataRepository) {
             if (file.name.startsWith("dummy_")
                 && (file.name.endsWith(".csv")
                         || file.name.endsWith(".xml")
-                        || file.name.endsWith(".json"
-                ))
+                        || file.name.endsWith(".json")
+                        || file.name.endsWith(".txt")
+                        )
             ) {
                 file.delete()
             }

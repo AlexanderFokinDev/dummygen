@@ -29,6 +29,8 @@ dependencies {
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.14.1")
 	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.1")
 
+	implementation("com.google.code.gson:gson:2.10.1")
+
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
