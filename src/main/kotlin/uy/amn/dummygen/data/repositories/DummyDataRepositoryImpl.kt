@@ -2,8 +2,11 @@ package uy.amn.dummygen.data.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.google.gson.Gson
 import com.opencsv.bean.StatefulBeanToCsvBuilder
 import org.springframework.core.io.InputStreamResource
+import uy.amn.dummygen.data.models.CountryDictionary
+import uy.amn.dummygen.data.models.CustomerDictionary
 import uy.amn.dummygen.domain.models.ColumnSettings
 import uy.amn.dummygen.domain.models.GeneratedRow
 import uy.amn.dummygen.domain.repositories.DummyDataRepository
@@ -36,6 +39,7 @@ class DummyDataRepositoryImpl : DummyDataRepository {
                         "date" -> generateRandomDate()
                         "default" -> returnDefaultValue(column.params)
                         "range" -> generateRandomNumberFromRange(column.params)
+                        "dictionary" -> generateRandomDictionaryValue(column.params)
                         else -> ""
                     }
                 )
@@ -46,7 +50,7 @@ class DummyDataRepositoryImpl : DummyDataRepository {
         return dataList
     }
 
-    private fun getHeadRow(columns: List<ColumnSettings>) : GeneratedRow {
+    private fun getHeadRow(columns: List<ColumnSettings>): GeneratedRow {
 
         val fields = mutableListOf<String>()
         for (column in columns) {
@@ -56,7 +60,7 @@ class DummyDataRepositoryImpl : DummyDataRepository {
         return GeneratedRow(fields)
     }
 
-    private fun generateIncrementalField(counter: Int, params: Map<String, Any>) : String {
+    private fun generateIncrementalField(counter: Int, params: Map<String, Any>): String {
 
         val start = (params.getOrDefault("start", 1) as Double).toInt()
         val step = (params.getOrDefault("step", 1) as Double).toInt()
@@ -64,7 +68,7 @@ class DummyDataRepositoryImpl : DummyDataRepository {
         return (start - 1 + counter * step).toString()
     }
 
-    private fun generateRandomNumberFromRange(params: Map<String, Any>) : String {
+    private fun generateRandomNumberFromRange(params: Map<String, Any>): String {
 
         val min = (params.getOrDefault("min", 1) as Double).toInt()
         val max = (params.getOrDefault("max", 1) as Double).toInt()
@@ -101,7 +105,7 @@ class DummyDataRepositoryImpl : DummyDataRepository {
 
     }
 
-    private fun generateRandomValue(params: Map<String, Any>, dataType: String) : String {
+    private fun generateRandomValue(params: Map<String, Any>, dataType: String): String {
 
         if (dataType.lowercase().trim() == "string") {
             val length = (params.getOrDefault("length", 10) as Double).toInt()
@@ -117,6 +121,64 @@ class DummyDataRepositoryImpl : DummyDataRepository {
             return ""
         }
 
+    }
+
+    private fun generateRandomDictionaryValue(params: Map<String, Any>): String {
+
+        val dictType = params["dictionary_type"] as String
+
+        return when (dictType) {
+
+            "countries" -> {
+                getRandomCountry()
+            }
+
+            "countries_abbreviation" -> {
+                getRandomCountryAbbreviation()
+            }
+
+            "customers" -> {
+                getRandomCustomer()
+            }
+
+            // add additional cases for other dictionary types
+            else -> {
+                throw IllegalArgumentException("Unknown dictionary type: $dictType")
+            }
+        }
+    }
+
+    private fun getRandomCountry(): String {
+
+        val countries = this::class.java.getResourceAsStream("/static/dictionaries/countries.json")
+            ?.bufferedReader()?.readText().let { json ->
+            Gson().fromJson(json, Array<CountryDictionary>::class.java)
+        }
+
+        // select a random item from the dictionary
+        return countries.random().country
+    }
+
+    private fun getRandomCountryAbbreviation(): String {
+
+        val countries = this::class.java.getResourceAsStream("/static/dictionaries/countries.json")
+            ?.bufferedReader()?.readText().let { json ->
+            Gson().fromJson(json, Array<CountryDictionary>::class.java)
+        }
+
+        // select a random item from the dictionary
+        return countries.random().abbreviation
+    }
+
+    private fun getRandomCustomer(): String {
+
+        val customers = this::class.java.getResourceAsStream("/static/dictionaries/customers.json")
+            ?.bufferedReader()?.readText().let { json ->
+            Gson().fromJson(json, Array<CustomerDictionary>::class.java)
+        }
+
+        // select a random item from the dictionary
+        return customers.random().name.toString()
     }
 
     override fun getGeneratedFileCSV(file: File, rows: Int, columns: List<ColumnSettings>): InputStreamResource {
