@@ -6,23 +6,14 @@
     <link rel="stylesheet" type="text/css" href="/resources/static/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function onFormatSelectChange() {
-        	const formatSelect = document.getElementById("formatSelect");
-        	const selectedFormat = formatSelect.options[formatSelect.selectedIndex].value;
-        	const rowsInput = document.getElementById("rows");
-        	const columnsInput = document.getElementById("columns");
-        	const settingsInput = document.getElementById("settingsJson");
-        	const submitButton = document.querySelector("button[type='submit']");
-
-        	if (selectedFormat === "settings_from_file") {
-        		rowsInput.disabled = true;
-        		columnsInput.disabled = true;
-        	} else {
-        		rowsInput.disabled = false;
-        		columnsInput.disabled = false;
-        	}
-        }
+    $(document).ready(function() {
+        $.getJSON('/resources/static/default_settings.json', function(data) {
+            var placeholderText = JSON.stringify(data, null, 4);
+            $('#settingsJson').val(placeholderText);
+        });
+    });
     </script>
 
 </head>
@@ -35,41 +26,13 @@
 </div>
 
 <div class="container my-5">
-    <h2 class="text-center white-bold-text">Dummy Table Form</h2>
+    <h2 class="text-center white-bold-text">Dummy Table Generator</h2>
     <form action="/submit-dummy-table" method="post" class="form-horizontal">
-
-        <div class="form-group">
-            <label for="formatSelect" class="col-sm-10 control-label white-bold-text">Select a response format:</label>
-            <div class="col-sm-10">
-                <select class="form-control col-sm-6" id="formatSelect" name="formatSelect" onchange="onFormatSelectChange()">
-                    <option value="json">JSON</option>
-                    <option value="xml">XML</option>
-                    <option value="csv">CSV</option>
-                    <option value="query_clickhouse">Clickhouse query</option>
-                    <option value="query_sql">SQL query</option>
-                    <option value="settings_from_file">Settings from file</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="rows" class="col-sm-10 control-label white-bold-text">Rows:</label>
-            <div class="col-sm-10">
-                <input type="text" class="col-sm-6 form-control" id="rows" name="rows" value="10">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="columns" class="col-sm-10 control-label white-bold-text">Columns:</label>
-            <div class="col-sm-10">
-                <input type="text" class="col-sm-6 form-control" id="columns" name="columns" value="5">
-            </div>
-        </div>
 
         <div class="form-group">
         <label for="settingsJson" class="col-sm-10 control-label white-bold-text">Settings (json format):</label>
             <div class="col-sm-10">
-                <textarea class="col-sm-10 form-control" id="settingsJson" name="settingsJson" rows="5"></textarea>
+                <textarea class="col-sm-10 form-control" id="settingsJson" name="settingsJson" rows="15"></textarea>
             </div>
         </div>
 
