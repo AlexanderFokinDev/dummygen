@@ -1,0 +1,53 @@
+{
+  "columns": [
+    {
+      "name": "id",
+      "dataType": "int",
+      "generator": "increment",
+      "params": {
+        "start": 1,
+        "step": 1
+      }
+    },
+    {
+      "name": "name",
+      "dataType": "string",
+      "generator": "random",
+      "params": {
+        "length": 10
+      }
+    },
+    {
+      "name": "email",
+      "dataType": "string",
+      "generator": "email"
+    },
+    {
+      "name": "load_date",
+      "dataType": "date",
+      "generator": "date",
+      "params": {
+        "format": "YYYY-MM-DD"
+      }
+    },
+    {
+      "name": "age",
+      "dataType": "int",
+      "generator": "range",
+      "params": {
+        "min": 18,
+        "max": 65
+      }
+    },
+    {
+      "name": "saller",
+      "dataType": "string",
+      "generator": "default",
+      "params": {
+        "value": "MC Company"
+      }
+    }
+  ],
+  "rows": 100,
+  "format": "json"
+}
