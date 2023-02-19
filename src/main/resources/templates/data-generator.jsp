@@ -27,7 +27,15 @@
 
 <div class="container my-5">
     <h2 class="text-center white-bold-text">Dummy Table Generator</h2>
+
+
     <form action="/submit-dummy-table" method="post" class="form-horizontal">
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <a href="https://github.com/AlexanderFokinDev/dummygen#readme" class="h3">Documentation</a>
+            </div>
+        </div>
 
         <div class="form-group">
         <label for="settingsJson" class="col-sm-10 control-label white-bold-text">Settings (json format):</label>

@@ -77,7 +77,12 @@ The app currently supports the following generators:
 - email: generates a random email address
 - date: generates a random date in the format specified by params.format
 - range: generates a random integer between the min and max values specified in params
-- default: takes the same default value for each row.
+- default: takes the same default value for each row
+- dictionary: generate a random value from data dictionary. Dictionary name specified by params.dictionary_type:
+
+    - countries
+    - countries_abbreviation
+    - customers
 
 To use the app, send a POST request to the server with the input file in the request body. The response will be the generated file in the format specified in the input file.
 
