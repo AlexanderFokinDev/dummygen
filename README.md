@@ -83,6 +83,7 @@ The app currently supports the following generators:
     - countries
     - countries_abbreviation
     - customers
+    - companies
 
 To use the app, send a POST request to the server with the input file in the request body. The response will be the generated file in the format specified in the input file.
 
