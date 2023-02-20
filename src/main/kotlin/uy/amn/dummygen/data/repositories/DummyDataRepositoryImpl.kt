@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.google.gson.Gson
 import com.opencsv.bean.StatefulBeanToCsvBuilder
 import org.springframework.core.io.InputStreamResource
+import uy.amn.dummygen.data.models.CompanyDictionary
 import uy.amn.dummygen.data.models.CountryDictionary
 import uy.amn.dummygen.data.models.CustomerDictionary
 import uy.amn.dummygen.domain.models.ColumnSettings
@@ -19,6 +20,21 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class DummyDataRepositoryImpl : DummyDataRepository {
+
+    private val countries: Array<CountryDictionary> = this::class.java.getResourceAsStream("/static/dictionaries/countries.json")
+        ?.bufferedReader()?.readText().let { json ->
+            Gson().fromJson(json, Array<CountryDictionary>::class.java)
+        } ?: emptyArray()
+
+    private val customers: Array<CustomerDictionary> = this::class.java.getResourceAsStream("/static/dictionaries/customers.json")
+        ?.bufferedReader()?.readText().let { json ->
+            Gson().fromJson(json, Array<CustomerDictionary>::class.java)
+        } ?: emptyArray()
+
+    private val companies: Array<CompanyDictionary> = this::class.java.getResourceAsStream("/static/dictionaries/companies.json")
+        ?.bufferedReader()?.readText().let { json ->
+            Gson().fromJson(json, Array<CompanyDictionary>::class.java)
+        } ?: emptyArray()
 
     override fun getGeneratedList(rows: Int, columns: List<ColumnSettings>): List<GeneratedRow> {
 
@@ -141,6 +157,10 @@ class DummyDataRepositoryImpl : DummyDataRepository {
                 getRandomCustomer()
             }
 
+            "companies" -> {
+                getRandomCompany()
+            }
+
             // add additional cases for other dictionary types
             else -> {
                 throw IllegalArgumentException("Unknown dictionary type: $dictType")
@@ -148,38 +168,13 @@ class DummyDataRepositoryImpl : DummyDataRepository {
         }
     }
 
-    private fun getRandomCountry(): String {
+    private fun getRandomCountry(): String = countries.random().country
 
-        val countries = this::class.java.getResourceAsStream("/static/dictionaries/countries.json")
-            ?.bufferedReader()?.readText().let { json ->
-            Gson().fromJson(json, Array<CountryDictionary>::class.java)
-        }
+    private fun getRandomCountryAbbreviation(): String = countries.random().abbreviation
 
-        // select a random item from the dictionary
-        return countries.random().country
-    }
+    private fun getRandomCustomer(): String = customers.random().name.toString()
 
-    private fun getRandomCountryAbbreviation(): String {
-
-        val countries = this::class.java.getResourceAsStream("/static/dictionaries/countries.json")
-            ?.bufferedReader()?.readText().let { json ->
-            Gson().fromJson(json, Array<CountryDictionary>::class.java)
-        }
-
-        // select a random item from the dictionary
-        return countries.random().abbreviation
-    }
-
-    private fun getRandomCustomer(): String {
-
-        val customers = this::class.java.getResourceAsStream("/static/dictionaries/customers.json")
-            ?.bufferedReader()?.readText().let { json ->
-            Gson().fromJson(json, Array<CustomerDictionary>::class.java)
-        }
-
-        // select a random item from the dictionary
-        return customers.random().name.toString()
-    }
+    private fun getRandomCompany(): String = companies.random().name
 
     override fun getGeneratedFileCSV(file: File, rows: Int, columns: List<ColumnSettings>): InputStreamResource {
 
