@@ -73,7 +73,7 @@ class DummyDataRepositoryImpl : DummyDataRepository {
         val min = (params.getOrDefault("min", 1) as Double).toInt()
         val max = (params.getOrDefault("max", 1) as Double).toInt()
 
-        val randNumber = (min..max).shuffled().first()
+        val randNumber = (min..max).random()
 
         return randNumber.toString()
     }
