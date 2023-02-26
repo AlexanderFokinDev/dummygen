@@ -31,6 +31,11 @@ dependencies {
 
 	implementation("com.google.code.gson:gson:2.10.1")
 
+	// Spring Security
+	// https://spring.io/guides/tutorials/spring-boot-oauth2/
+	//implementation("org.springframework.boot:spring-boot-starter-security")
+	//implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
