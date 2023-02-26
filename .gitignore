@@ -40,3 +40,4 @@ dummy*.csv
 dummy*.json
 dummy*.xml
 dummy*.txt
+*.ldif
