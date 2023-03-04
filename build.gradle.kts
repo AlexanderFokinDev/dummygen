@@ -33,7 +33,7 @@ dependencies {
 
 	// Spring Security
 	// https://spring.io/guides/tutorials/spring-boot-oauth2/
-	//implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	//implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
 	runtimeOnly("com.h2database:h2")
