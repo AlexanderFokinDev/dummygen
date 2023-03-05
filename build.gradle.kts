@@ -26,8 +26,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("com.opencsv:opencsv:5.3")
 
-	implementation("com.fasterxml.jackson.core:jackson-databind:2.14.1")
-	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.1")
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
+	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2")
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
 
 	implementation("com.google.code.gson:gson:2.10.1")
 
@@ -35,6 +36,7 @@ dependencies {
 	// https://spring.io/guides/tutorials/spring-boot-oauth2/
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	//implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+	testImplementation("org.springframework.security:spring-security-test:5.5.1")
 
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")

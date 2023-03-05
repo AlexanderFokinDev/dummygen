@@ -1,5 +1,7 @@
 package uy.amn.dummygen
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -176,4 +178,8 @@ data class HelloResponse(
     val name: String
 )
 
-data class City(val id: Int, val name: String, val population: Int)
+data class City @JsonCreator constructor(
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("name") val name: String,
+    @JsonProperty("population") val population: Int
+)
